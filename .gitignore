@@ -1,7 +1,7 @@
 .idea
 dist
 venv
-TikTokLive.egg-info
+*.egg-info
 requirements.txt
 .pypirc
 dev
