@@ -31,6 +31,7 @@ class WebcastPushConnection:
     def __init__(
             self,
             unique_id: str,
+            final_room_id: str,
             loop: Optional[AbstractEventLoop] = None,
             http_params: Optional[dict] = None,
             http_headers: Optional[dict] = None,
@@ -74,6 +75,7 @@ class WebcastPushConnection:
         self.__room_info: Optional[dict] = None
         self.__available_gifts: Dict[int, GiftDetailed] = dict()
         self.__unique_id: str = validate_and_normalize_unique_id(unique_id)
+        self.__final_room_id: str = final_room_id
         self.__room_id: Optional[int] = None
         self.__connecting: bool = False
         self.__connected: bool = False
@@ -147,12 +149,18 @@ class WebcastPushConnection:
         """
 
         try:
-            html: str = await self.http.get_livestream_page_html(self.__unique_id)
-            self.__room_id = int(get_room_id_from_main_page_html(html))
+            if len(self.__final_room_id) != 0:
+                self.__room_id = int(self.__final_room_id)
+            else:
+                html: str = await self.http.get_livestream_page_html(self.__unique_id)
+                self.__room_id = int(get_room_id_from_main_page_html(html))
+
             self.http.params["room_id"] = str(self.__room_id)
+
             return self.__room_id
         except Exception as ex:
-            await self._on_error(ex, FailedFetchRoomInfo("Failed to fetch room id from Webcast, see stacktrace for more info."))
+            await self._on_error(ex, FailedFetchRoomInfo(
+                "Failed to fetch room id from Webcast, see stacktrace for more info."))
             return None
 
     async def _fetch_room_data(self) -> dict:
@@ -164,7 +172,8 @@ class WebcastPushConnection:
         """
 
         # Fetch from polling api
-        webcast_response = await self.http.get_deserialized_object_from_signing_api("webcast/fetch/", self.http.params, "WebcastResponse")
+        webcast_response = await self.http.get_deserialized_object_from_signing_api("webcast/fetch/", self.http.params,
+                                                                                    "WebcastResponse")
 
         # Update cursor
         _last_cursor, _next_cursor = self.http.params["cursor"], webcast_response.get("cursor")
@@ -373,7 +382,8 @@ class WebcastPushConnection:
 
         """
 
-        self.loop.run_until_complete(self._start())  # TODO this is the reason the event loop stops. run until complete runs until the future ends, see docs
+        self.loop.run_until_complete(
+            self._start())  # TODO this is the reason the event loop stops. run until complete runs until the future ends, see docs
 
     async def retrieve_room_info(self) -> Optional[dict]:
         """
@@ -388,7 +398,8 @@ class WebcastPushConnection:
             self.__room_info = response
             return self.__room_info
         except Exception as ex:
-            await self._on_error(ex, FailedFetchRoomInfo("Failed to fetch room info from Webcast, see stacktrace for more info."))
+            await self._on_error(ex, FailedFetchRoomInfo(
+                "Failed to fetch room info from Webcast, see stacktrace for more info."))
             return None
 
     async def retrieve_available_gifts(self) -> Optional[Dict[int, GiftDetailed]]:
@@ -412,7 +423,8 @@ class WebcastPushConnection:
                         await self._on_error(ex, FailedParseGift("Failed to parse gift's extra info"))
             return self.__available_gifts
         except Exception as ex:
-            await self._on_error(ex, FailedFetchGifts("Failed to fetch gift data from Webcast, see stacktrace for more info."))
+            await self._on_error(ex, FailedFetchGifts(
+                "Failed to fetch gift data from Webcast, see stacktrace for more info."))
             return None
 
     def download(
@@ -490,7 +502,8 @@ class WebcastPushConnection:
 
         # Give info about the started download
         if self.ffmpeg.verbose:
-            logging.warning(f"Started the download to path \"{path}\" for duration \"{'infinite' if runtime is None else duration} seconds\" on user @{self.unique_id} with \"{quality.name}\" video quality")
+            logging.warning(
+                f"Started the download to path \"{path}\" for duration \"{'infinite' if runtime is None else duration} seconds\" on user @{self.unique_id} with \"{quality.name}\" video quality")
 
     def stop_download(self) -> None:
         """
@@ -508,7 +521,8 @@ class WebcastPushConnection:
 
         # If attempting to stop a download before the process has opened
         if self.ffmpeg.ffmpeg.process is None:
-            raise DownloadProcessNotFound("Download process not found. You are likely stopping the download before the ffmpeg process has opened. Add a delay!")
+            raise DownloadProcessNotFound(
+                "Download process not found. You are likely stopping the download before the ffmpeg process has opened. Add a delay!")
 
         # Kill the process
         os.kill(self.ffmpeg.ffmpeg.process.pid, signal.CTRL_BREAK_EVENT)

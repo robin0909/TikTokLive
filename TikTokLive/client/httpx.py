@@ -50,7 +50,8 @@ class TikTokHTTPClient:
         self.loop: AbstractEventLoop = loop
         self.timeout: float = timeout or 10.0
         self.proxies: Optional[Dict[str, str]] = proxies
-        self.headers: Dict[str, str] = {**config.DEFAULT_REQUEST_HEADERS, **(headers if isinstance(headers, dict) else dict())}
+        self.headers: Dict[str, str] = {**config.DEFAULT_REQUEST_HEADERS,
+                                        **(headers if isinstance(headers, dict) else dict())}
         self.params: dict = params if params else dict()
         self.sign_api_key: str = sign_api_key or ""
         self.trust_env: bool = trust_env
@@ -195,7 +196,7 @@ class TikTokHTTPClient:
 
         """
 
-        params: dict = {**params, **{"client": TikTokHTTPClient._identity, "uuc": TikTokHTTPClient._uuc, "apiKey": self.sign_api_key}}
+        params: dict = {**params, **{"client": TikTokHTTPClient._identity, "uuc": 1, "apiKey": self.sign_api_key}}
         response: bytes = await self.__httpx_get_bytes(config.TIKTOK_SIGN_API + path, params, sign_api=True)
         return deserialize_message(schema, response)
 

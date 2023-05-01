@@ -1,8 +1,17 @@
 from TikTokLive import TikTokLiveClient
 from TikTokLive.types.events import CommentEvent, ConnectEvent
 
+# proxy='http://user-echotik-region-ph:112358@pr.roxlabs.cn:4600'
+proxy = 'http://localhost:7890'
+
+proxies = {
+    'http://': proxy,
+    'https://': proxy
+}
+
 # Instantiate the client with the user's username
-client: TikTokLiveClient = TikTokLiveClient(unique_id="@gashi_137")
+client: TikTokLiveClient = TikTokLiveClient(unique_id="@fiyangrosir", final_room_id="7228019655003081499",
+                                            proxies=proxies, http_timeout=30)
 
 
 # Define how you want to handle specific events via decorator

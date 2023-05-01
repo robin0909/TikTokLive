@@ -7,17 +7,17 @@ with open("README.md", "r", encoding="utf-8") as fh:
 # rm -r dist ; python setup.py sdist ; python -m twine upload dist/*
 
 setuptools.setup(
-    name="TikTokLive",
+    name="TikTokLiveCustom",
     packages=setuptools.find_packages(),
-    version="5.0.7",
+    version="0.2",
     license="MIT",
     description="TikTok Live Connection Client",
-    author="Isaac Kogan",
-    author_email="info@isaackogan.com",
-    url="https://github.com/isaackogan/TikTokLive",
+    author="robinyang",
+    author_email="robinyang_beijing@163.com",
+    url="https://github.com/robinyang0909/TikTokLive",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    download_url="https://github.com/isaackogan/TikTokLive/releases/tag/v5.0.7",
+    # download_url="https://github.com/isaackogan/TikTokLive/releases/tag/v5.0.7",
     keywords=["tiktok", "tiktok live", "python3", "api", "unofficial"],
     install_requires=[
         "httpx>=0.23.0",  # Make requests

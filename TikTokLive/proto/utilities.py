@@ -67,7 +67,8 @@ def deserialize_websocket_message(binary_message: bytes) -> dict:
     """
 
     decoded: dict = deserialize_message("WebcastWebsocketMessage", binary_message)
-    return {**decoded, **deserialize_message("WebcastResponse", decoded.get("binary"))} if decoded.get("type") == "msg" else dict()
+    return {**decoded, **deserialize_message("WebcastResponse", decoded.get("binary"))} if decoded.get(
+        "type") == "msg" else dict()
 
 
 def serialize_message(proto_name: str, data: dict) -> bytes:
