@@ -399,7 +399,7 @@ class Gift(AbstractObject):
     count: Optional[int] = alias("repeatCount", default=None)
     """Number of times the gift has repeated"""
 
-    is_repeating: Optional[int] = alias("repeatEnd", default=0)
+    repeat_end: Optional[int] = alias("repeatEnd", default=0)
     """Whether or not the repetition is over"""
 
     info: Optional[GiftInfo] = field(default_factory=GiftInfo)
@@ -430,7 +430,7 @@ class Gift(AbstractObject):
 
         """
 
-        return bool(self.is_repeating)
+        return not bool(self.repeat_end)
 
 
 @dataclass()
@@ -568,6 +568,19 @@ class BattleArmy(AbstractObject):
 
     participants: List[User] = field(default_factory=list)
     """The users involved in the specific battle army"""
+
+
+@dataclass()
+class ValueLabel(AbstractObject):
+    """
+    Label containing a value
+
+    """
+
+    value: Optional[str] = None
+    data: Optional[int] = None
+    label: Optional[str] = None
+    label2: Optional[str] = None
 
 
 @dataclass()

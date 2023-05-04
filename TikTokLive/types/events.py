@@ -11,7 +11,8 @@ from typing import Optional, List, Any, Dict, ClassVar
 
 from mashumaro import DataClassDictMixin, pass_through
 
-from TikTokLive.types import User, Gift, Emote, TreasureBoxData, ExtraRankData, LinkUser, BattleArmy, TopViewer, ChatImage
+from TikTokLive.types import User, Gift, Emote, TreasureBoxData, ExtraRankData, LinkUser, BattleArmy, TopViewer, \
+    ChatImage, ValueLabel
 from TikTokLive.types.utilities import LiveEvent, alias
 
 
@@ -336,10 +337,11 @@ class EnvelopeEvent(AbstractEvent):
     """Data about the user that sent the treasure box"""
 
 
-@LiveEvent("weekly_ranking")
-class WeeklyRankingEvent(AbstractEvent):
+@LiveEvent("user_ranking_update")
+class UserRankingUpdateEvent(AbstractEvent):
     """
-    Event that fires when the weekly rankings are updated
+    Event publishing that a user ranked up in some way
+    e.g. "{0:user} just became a top {1:string} viewer!"
 
     """
 
@@ -350,35 +352,82 @@ class WeeklyRankingEvent(AbstractEvent):
 
         """
 
-        ranks: Dict[str, Any] = d.get('data', dict()).get('rankings', dict())  # Do a little flattening
+        data: dict = d.get('details', dict())
+        details: List[dict] = data.get('details', list())
 
-        # Try to flatten rank data & convert to int
+        # Delete Duplicate Entry
         try:
-            ranks['rank'] = int(ranks.get('data', dict()).get('rank', None))
+            del data['details']
+        except KeyError:
+            pass
+
+        # Bring out user object
+        for detail in details:
+
+            # data1 = 11
+            if detail.get('user', dict()).get('user'):
+                data['user'] = detail['user']['user']
+
+            # data1 = 1
+            if detail.get('data1') == 1:
+                data['rank'] = detail.get('category')
+
+        return data
+
+    type: Optional[str] = None
+    """The type of update"""
+
+    label: Optional[str] = None
+    """Update message text label"""
+
+    user: Optional[User] = None
+    """User who is ranking up"""
+
+    rank: Optional[int] = None
+    """The rank of the user"""
+
+
+@LiveEvent("ranking_update")
+class RankingUpdateEvent(AbstractEvent):
+    """
+    Event firing containing updates to rank information. So far, this has been noted to include:
+    - Weekly Ranking
+    - Rising Stars
+    """
+
+    @classmethod
+    def __pre_deserialize__(cls, d: Dict[Any, Any]) -> Dict[Any, Any]:
+        """
+        Pre-process weekly ranking event
+
+        """
+
+        rank: Dict[str, Any] = d.get('data', dict()).get('data', dict())  # Flatten
+
+        # Try to flatten rank data & convert to int to
+        try:
+            details: Optional[List] = rank.get('details', list())
+            if len(details) > 0:
+                rank['rank'] = int(details[0].get('value', None))
         except:
             pass
 
-        return ranks
+        return rank
 
     type: Optional[str] = None
-    """Unknown"""
+    """The type of rank update (e.g. Rising stars, etc.)"""
 
     label: Optional[str] = None
     """Internal TikTok Label"""
+
+    details: List[ValueLabel] = field(default_factory=list)
+    """The user's ranking details. This can be more than just weekly ranking!"""
 
     extra: Optional[ExtraRankData] = field(default_factory=ExtraRankData)
     """Extra data relating to the UI, presumably"""
 
     rank: Optional[int] = None
-    """The number for the user's TikTok ranking. If the rank is "None", the user is not in the top 99."""
-
-    @property
-    def top_99(self) -> bool:
-        """
-        Whether the user is in the top 99 of creators
-        """
-
-        return self.rank is not None
+    """The number for the user's TikTok ranking. """
 
 
 @LiveEvent("intro_message")

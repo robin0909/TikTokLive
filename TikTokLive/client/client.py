@@ -6,8 +6,10 @@ from pyee import AsyncIOEventEmitter
 
 from .base import WebcastPushConnection
 from ..types import FailedParseMessage, TopViewer
-from ..types.events import AbstractEvent, ConnectEvent, DisconnectEvent, ViewerUpdateEvent, JoinEvent, LikeEvent, FollowEvent, ShareEvent, QuestionEvent, LiveEndEvent, \
-    IntroMessageEvent, EmoteEvent, MicBattleStartEvent, MicBattleUpdateEvent, MoreShareEvent, UnknownEvent, WeeklyRankingEvent, CommentEvent, GiftEvent
+from ..types.events import AbstractEvent, ConnectEvent, DisconnectEvent, ViewerUpdateEvent, JoinEvent, LikeEvent, \
+    FollowEvent, ShareEvent, QuestionEvent, LiveEndEvent, \
+    IntroMessageEvent, EmoteEvent, MicBattleStartEvent, MicBattleUpdateEvent, MoreShareEvent, UnknownEvent, \
+    CommentEvent, GiftEvent, RankingUpdateEvent, UserRankingUpdateEvent
 
 
 class TikTokLiveClient(WebcastPushConnection, AsyncIOEventEmitter):
@@ -164,14 +166,14 @@ class TikTokLiveClient(WebcastPushConnection, AsyncIOEventEmitter):
                 "WebcastRoomUserSeqMessage": ViewerUpdateEvent,
                 "WebcastMemberMessage": JoinEvent,
                 "WebcastLikeMessage": LikeEvent,
-                "WebcastRankUpdateMessage": WeeklyRankingEvent,
-                "WebcastHourlyRankMessage": WeeklyRankingEvent,
+                "WebcastRankUpdateMessage": RankingUpdateEvent,
+                "WebcastHourlyRankMessage": RankingUpdateEvent,
                 "WebcastQuestionNewMessage": QuestionEvent,
                 "WebcastLiveIntroMessage": IntroMessageEvent,
                 "WebcastEmoteChatMessage": EmoteEvent,
                 "WebcastLinkMicBattle": MicBattleStartEvent,
-                "WebcastLinkMicArmies": MicBattleUpdateEvent
-
+                "WebcastLinkMicArmies": MicBattleUpdateEvent,
+                "WebcastRankTextMessage": UserRankingUpdateEvent
             }.get(webcast_message.get('type'))
         )
 
