@@ -31,7 +31,7 @@ class WebcastPushConnection:
     def __init__(
             self,
             unique_id: str,
-            final_room_id: str,
+            final_room_id: str = None,
             loop: Optional[AbstractEventLoop] = None,
             http_params: Optional[dict] = None,
             http_headers: Optional[dict] = None,

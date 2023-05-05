@@ -10,7 +10,7 @@ proxies = {
 }
 
 # Instantiate the client with the user's username
-client: TikTokLiveClient = TikTokLiveClient(unique_id="@fiyangrosir", final_room_id="7228019655003081499",
+client: TikTokLiveClient = TikTokLiveClient(unique_id="@giff.thiwashop", final_room_id="7229284279892642565",
                                             proxies=proxies, http_timeout=30)
 
 
