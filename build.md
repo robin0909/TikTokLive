@@ -6,7 +6,11 @@ rm -rf build dist
 
 ### 打包
 ```shell
+python3 setup.py sdist bdist_wheel
 python setup.py install
+
+# 安装 bdist_wheel
+# python3 setup.py sdist bdist_wheel
 ```
 
 
@@ -15,7 +19,7 @@ python setup.py install
 twine upload dist/*
 
 # 安装 twine
-pip install twine
+# pip install twine
 ```
 
 
