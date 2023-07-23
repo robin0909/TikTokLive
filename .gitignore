@@ -6,4 +6,4 @@ requirements.txt
 .pypirc
 dev
 build
-egg-info
+*.egg-info
