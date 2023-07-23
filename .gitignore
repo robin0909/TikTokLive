@@ -5,3 +5,4 @@ TikTokLive.egg-info
 requirements.txt
 .pypirc
 dev
+build
