@@ -1,10 +1,10 @@
 TikTokLive
 ==================
-A python library to connect to and read events from TikTok's LIVE service.
+A Python library to connect to and read events from TikTok's LIVE service.
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white&style=flat-square)](https://www.linkedin.com/in/isaac-kogan-5a45b9193/ )
 [![HitCount](https://hits.dwyl.com/isaackogan/TikTokLive.svg?style=flat)](http://hits.dwyl.com/isaackogan/TikTokLive)
-![Downloads](https://pepy.tech/badge/TikTokLive)
+![Downloads/Month](https://img.shields.io/pypi/dm/tiktoklive)
 ![Issues](https://img.shields.io/github/issues/isaackogan/TikTokLive)
 ![Forks](https://img.shields.io/github/forks/isaackogan/TikTokLive)
 ![Stars](https://img.shields.io/github/stars/isaackogan/TikTokLive)
@@ -12,13 +12,10 @@ A python library to connect to and read events from TikTok's LIVE service.
 
 <!-- [![Downloads](https://pepy.tech/badge/tiktoklive)](https://pepy.tech/project/tiktoklive) -->
 
-A python library to receive and decode livestream events such as comments and gifts in real-time from TikTok's LIVE service by connecting to TikTok's internal Webcast service. This library includes a wrapper that
+A Python library to receive and decode livestream events such as comments and gifts in real-time from TikTok's LIVE service by connecting to TikTok's internal Webcast service. This library includes a wrapper that
 connects to the Webcast service using only a user's `unique_id` and allows you to join your livestream as well as that of other streamers. No credentials are required to use TikTokLive.
 
-This library was originally based off of the
-[TikTok-Live-Connector](https://github.com/zerodytrash/TikTok-Live-Connector)
-by [@zerodytrash](https://github.com/zerodytrash/), but has since taken on its own identity as it has added more features & changed much of its core functionality.
-
+## Support
 
 Join the [support discord](https://discord.gg/e2XwPNTBBr) and visit the `#py-support` channel for questions, contributions and ideas. Feel free to make pull requests with missing/new features, fixes, etc.
 
@@ -31,7 +28,8 @@ TikTok LIVE is available in several alternative languages with only slight diffe
 - **Node.JS:** https://github.com/zerodytrash/TikTok-Live-Connector
 - **Go:** https://github.com/Davincible/gotiktoklive
 - **C#/Unity:** https://github.com/frankvHoof93/TikTokLiveSharp
-
+- **Java:** https://github.com/jwdeveloper/TikTok-Live-Java
+  
 ## Table of Contents
 
 **Primary Information**
@@ -61,8 +59,8 @@ Python [TikTok-Api](https://github.com/davidteather/TikTok-Api) package. Click t
 
 1. Install the module via pip
 
-```
-pip install TikTokLive
+```shell script
+> pip install TikTokLive
 ```
 
 2. Create your first chat connection
@@ -274,6 +272,8 @@ async def on_connect(event: ViewerUpdateEvent):
 ### `comment`
 
 Triggered every time someone comments on the live.
+
+**NOTE:** Some comments will be missing. Certain "low quality" comments will ONLY show up when a `session_id` is passed to the client.
 
 ```python
 @client.on("comment")
